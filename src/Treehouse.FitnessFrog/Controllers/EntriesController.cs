@@ -51,6 +51,8 @@ namespace Treehouse.FitnessFrog.Controllers
             return View(entry);
         }
 
+       
+
         [HttpPost]
         public ActionResult Add(Entry entry)
         {
@@ -60,8 +62,6 @@ namespace Treehouse.FitnessFrog.Controllers
             {
                 _entriesRepository.AddEntry(entry);
 
-                TempData["Message"] = "Your entry was successfully added!";
-
                 return RedirectToAction("Index");
             }
 
@@ -70,25 +70,23 @@ namespace Treehouse.FitnessFrog.Controllers
             return View(entry);
         }
 
+
+
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
             Entry entry = _entriesRepository.GetEntry((int)id);
 
             if (entry == null)
             {
                 return HttpNotFound();
             }
-
             SetupActivitiesSelectListItems();
-
             return View(entry);
         }
-
         [HttpPost]
         public ActionResult Edit(Entry entry)
         {
@@ -97,17 +95,12 @@ namespace Treehouse.FitnessFrog.Controllers
             if (ModelState.IsValid)
             {
                 _entriesRepository.UpdateEntry(entry);
-
-                TempData["Message"] = "Your entry was successfully updated!";
-
                 return RedirectToAction("Index");
             }
 
             SetupActivitiesSelectListItems();
-
             return View(entry);
         }
-
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -115,26 +108,8 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Entry entry = _entriesRepository.GetEntry((int)id);
-
-            if (entry == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(entry);
+            return View();
         }
-
-        [HttpPost]
-        public ActionResult Delete(int id)
-        {
-            _entriesRepository.DeleteEntry(id);
-
-            TempData["Message"] = "Your entry was successfully deleted!";
-
-            return RedirectToAction("Index");
-        }
-
         private void ValidateEntry(Entry entry)
         {
             // If there aren't any "Duration" field validation errors
@@ -145,7 +120,6 @@ namespace Treehouse.FitnessFrog.Controllers
                     "The Duration field value must be greater than '0'.");
             }
         }
-
         private void SetupActivitiesSelectListItems()
         {
             ViewBag.ActivitiesSelectListItems = new SelectList(
